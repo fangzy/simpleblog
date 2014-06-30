@@ -17,6 +17,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Read all the markdown files in the content path
@@ -26,6 +28,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class MarkdownFileReader extends BlogDataReader {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
+
+    private Pattern metaPattern = Pattern.compile("(\\w+\\s*):(.+)");
 
     public MarkdownFileReader() {
         setConvert(new Markdown4jConvert());
@@ -68,6 +72,13 @@ public class MarkdownFileReader extends BlogDataReader {
         }
         exec.shutdown();
         return list;
+    }
+
+    public void setMetaInfo(BlogData blogData, String line) {
+        Matcher matcher = metaPattern.matcher(line);
+        if (matcher.find() && matcher.groupCount() == 2) {
+            blogData.setValue(matcher.group(1).trim(), matcher.group(2).trim());
+        }
     }
 
     class MarkdownFileFinder extends SimpleFileVisitor<Path> {
@@ -131,8 +142,7 @@ public class MarkdownFileReader extends BlogDataReader {
                     continue;
                 }
                 if (headerCount == 1) {
-                    String[] header = line.split(":");
-                    blog.setValue(header[0].trim(), header[1].trim());
+                    setMetaInfo(blog, line);
                     continue;
                 }
                 if (headerEnd) {
