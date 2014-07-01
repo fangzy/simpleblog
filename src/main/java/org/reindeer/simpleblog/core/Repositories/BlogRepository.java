@@ -3,6 +3,7 @@ package org.reindeer.simpleblog.core.Repositories;
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.reindeer.simpleblog.core.model.BlogData;
 import org.reindeer.simpleblog.core.model.BlogView;
+import org.reindeer.simpleblog.core.model.CategoryView;
 import org.reindeer.simpleblog.core.model.PageView;
 
 import java.util.HashMap;
@@ -29,4 +30,6 @@ public interface BlogRepository {
     String[] getRecentTitles(int i);
 
     PageView getPageView(int index,int pageSize);
+
+    CategoryView getCategoryView(String id);
 }

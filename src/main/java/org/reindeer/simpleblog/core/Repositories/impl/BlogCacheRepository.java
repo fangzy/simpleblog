@@ -5,11 +5,15 @@ import org.reindeer.simpleblog.core.Repositories.BlogCache;
 import org.reindeer.simpleblog.core.Repositories.BlogRepository;
 import org.reindeer.simpleblog.core.model.BlogData;
 import org.reindeer.simpleblog.core.model.BlogView;
+import org.reindeer.simpleblog.core.model.CategoryView;
 import org.reindeer.simpleblog.core.model.PageView;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.TreeMap;
 
 /**
  * Created by fzy on 2014/6/27.
@@ -69,7 +73,6 @@ public class BlogCacheRepository implements BlogRepository {
         PageView pageView = new PageView();
         List<BlogData> blogDataList = new ArrayList<>();
         blogDataList.addAll(cache.getBlogDataList());
-        Collections.reverse(blogDataList);
         int totalSize=blogDataList.size();
         int currentPos=(index-1)*pageSize;
         if (totalSize<currentPos+1){
@@ -88,6 +91,11 @@ public class BlogCacheRepository implements BlogRepository {
         pageView.setPageTotal(totalPage);
         pageView.setRandomTitles(cache.getRandomTitles(5));
         return pageView;
+    }
+
+    @Override
+    public CategoryView getCategoryView(String id) {
+        return null;
     }
 
 }
