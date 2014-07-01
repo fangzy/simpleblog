@@ -26,10 +26,12 @@ public class BlogCache {
 
     private HashMap<String, MutableInt> timeCountMap = new LinkedHashMap<>();
 
+    private Comparator<BlogData> blogDataComparator = new BlogDataComparator();
+
     public void put(BlogData t) {
         blogDataMap.put(t.getTitle(), t);
         blogDataList.add(t);
-        Collections.sort(blogDataList);
+        Collections.sort(blogDataList, blogDataComparator);
     }
 
     /**
@@ -74,7 +76,7 @@ public class BlogCache {
             this.timeCountMap.put(displayFormat.format(entry.getKey()), entry.getValue());
         }
 
-        Collections.sort(this.blogDataList);
+        Collections.sort(this.blogDataList, blogDataComparator);
     }
 
     public BlogData get(String title) {
@@ -87,7 +89,7 @@ public class BlogCache {
 
     public String getNextTitle(BlogData blogData) {
         String nextTitle = null;
-        int pos = Collections.binarySearch(blogDataList, blogData);
+        int pos = Collections.binarySearch(blogDataList, blogData, blogDataComparator);
         if (pos < blogDataList.size() - 1) {
             nextTitle = blogDataList.get(pos + 1).getTitle();
         }
@@ -96,7 +98,7 @@ public class BlogCache {
 
     public String getPrevTitle(BlogData blogData) {
         String prevTitle = null;
-        int pos = Collections.binarySearch(blogDataList, blogData);
+        int pos = Collections.binarySearch(blogDataList, blogData, blogDataComparator);
         if (pos > 0) {
             prevTitle = blogDataList.get(pos - 1).getTitle();
         }
@@ -135,14 +137,30 @@ public class BlogCache {
         int size = blogDataList.size();
         List<BlogData> subList = new ArrayList<>();
         if (i < size) {
-            subList.addAll(blogDataList.subList(size - i, size));
+            subList.addAll(blogDataList.subList(0, i));
         } else {
             subList.addAll(blogDataList);
         }
-        Collections.reverse(subList);
         for (int m = 0; m < i; m++) {
             recentArray[m] = subList.get(m).getTitle();
         }
         return recentArray;
+    }
+
+    class BlogDataComparator implements Comparator<BlogData> {
+
+
+        @Override
+        public int compare(BlogData o1, BlogData o2) {
+            int result = o1.getCreated().compareTo(o2.getCreated());
+            if (result == -1) {
+                result = 1;
+            } else if (result == 1) {
+                result = -1;
+            } else {
+                result = o1.getTitle().compareTo(o2.getTitle());
+            }
+            return result;
+        }
     }
 }
