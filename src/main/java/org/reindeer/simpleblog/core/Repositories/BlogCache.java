@@ -2,8 +2,11 @@ package org.reindeer.simpleblog.core.Repositories;
 
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.reindeer.simpleblog.core.model.BlogData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -12,6 +15,8 @@ import java.util.concurrent.ThreadLocalRandom;
  * Created by fzy on 2014/6/29.
  */
 public class BlogCache {
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     private List<BlogData> blogDataList = new ArrayList<>();
 
@@ -41,10 +46,16 @@ public class BlogCache {
 
         //得到分类计数器,时间计数器
         TreeMap<Date, MutableInt> timeCountMap = new TreeMap<>();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM");
         for (BlogData blogData : this.blogDataList) {
             blogDataMap.put(blogData.getTitle(), blogData);
             String category = blogData.getCategory();
             Date time = blogData.getCreated();
+            try {
+                time = new Date(dateFormat.parse(dateFormat.format(time)).getTime());
+            } catch (ParseException e) {
+                logger.error("An unexpected error occurred.", e);
+            }
             MutableInt categoryCount = categoryCountMap.get(category);
             MutableInt timeCount = timeCountMap.get(time);
             if (categoryCount == null) {
@@ -58,9 +69,9 @@ public class BlogCache {
                 timeCount.increment();
             }
         }
-        DateFormat dateFormat = new SimpleDateFormat("MMMMM yyyy", Locale.ENGLISH);
-        for (Map.Entry<Date, MutableInt> entry : timeCountMap.entrySet()) {
-            this.timeCountMap.put(dateFormat.format(entry.getKey()), entry.getValue());
+        DateFormat displayFormat = new SimpleDateFormat("MMMMM yyyy", Locale.ENGLISH);
+        for (Map.Entry<Date, MutableInt> entry : timeCountMap.descendingMap().entrySet()) {
+            this.timeCountMap.put(displayFormat.format(entry.getKey()), entry.getValue());
         }
 
         Collections.sort(this.blogDataList);

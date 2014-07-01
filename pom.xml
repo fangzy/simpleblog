@@ -9,7 +9,7 @@
     <url>http://maven.apache.org</url>
     <properties>
         <org.springframework-version>4.0.5.RELEASE</org.springframework-version>
-        <org.slf4j-version>1.6.1</org.slf4j-version>
+        <org.slf4j-version>1.7.7</org.slf4j-version>
         <org.jedis-version>2.5.1</org.jedis-version>
         <org.freemarker-version>2.3.20</org.freemarker-version>
     </properties>
