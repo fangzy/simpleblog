@@ -1,12 +1,10 @@
 package org.reindeer.simpleblog.core.Repositories.impl;
 
 import org.apache.commons.lang3.mutable.MutableInt;
+import org.reindeer.simpleblog.Constant;
 import org.reindeer.simpleblog.core.Repositories.BlogCache;
 import org.reindeer.simpleblog.core.Repositories.BlogRepository;
-import org.reindeer.simpleblog.core.model.BlogData;
-import org.reindeer.simpleblog.core.model.BlogView;
-import org.reindeer.simpleblog.core.model.CategoryView;
-import org.reindeer.simpleblog.core.model.PageView;
+import org.reindeer.simpleblog.core.model.*;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
 
@@ -48,7 +46,7 @@ public class BlogCacheRepository implements BlogRepository {
         blogView.setBlogData(blogData);
         blogView.setNextTitle(cache.getNextTitle(blogData));
         blogView.setPrevTitle(cache.getPrevTitle(blogData));
-        blogView.setRandomTitles(cache.getRandomTitles(5));
+        blogView.setRandomTitles(cache.getRandomTitles(Constant.RANDOM_NO));
         return blogView;
     }
 
@@ -58,8 +56,8 @@ public class BlogCacheRepository implements BlogRepository {
     }
 
     @Override
-    public HashMap<String, MutableInt> getTimeCount() {
-        return cache.getTimeCountMap();
+    public HashMap<String, MutableInt> getArchiveCount() {
+        return cache.getArchiveCountMap();
     }
 
     @Override
@@ -89,13 +87,48 @@ public class BlogCacheRepository implements BlogRepository {
         pageView.setPageSize(pageSize);
         pageView.setPageCurrent(index);
         pageView.setPageTotal(totalPage);
-        pageView.setRandomTitles(cache.getRandomTitles(5));
+        pageView.setRandomTitles(cache.getRandomTitles(Constant.RANDOM_NO));
         return pageView;
     }
 
     @Override
     public CategoryView getCategoryView(String id) {
-        return null;
+        CategoryView view = new CategoryView();
+        CategoryData categoryData = cache.getCategoryDataMap(id);
+        view.addCategory(categoryData);
+        view.setRandomTitles(cache.getRandomTitles(Constant.RANDOM_NO));
+        return view;
+    }
+
+    @Override
+    public CategoryView getCategoryView() {
+        CategoryView view = new CategoryView();
+        TreeMap<String, CategoryData> categoryDataMap = cache.getCategoryDataMap();
+        for (CategoryData categoryData : categoryDataMap.values()) {
+            view.addCategory(categoryData);
+        }
+        view.setRandomTitles(cache.getRandomTitles(Constant.RANDOM_NO));
+        return view;
+    }
+
+    @Override
+    public CategoryView getArchiveView(String dateStr) {
+        CategoryView view = new CategoryView();
+        CategoryData categoryData = cache.getArchiveDataMap(dateStr);
+        view.addCategory(categoryData);
+        view.setRandomTitles(cache.getRandomTitles(Constant.RANDOM_NO));
+        return view;
+    }
+
+    @Override
+    public CategoryView getArchiveView() {
+        CategoryView view = new CategoryView();
+        HashMap<String, CategoryData> archiveDataMap = cache.getArchiveDataMap();
+        for (CategoryData categoryData : archiveDataMap.values()) {
+            view.addCategory(categoryData);
+        }
+        view.setRandomTitles(cache.getRandomTitles(Constant.RANDOM_NO));
+        return view;
     }
 
 }

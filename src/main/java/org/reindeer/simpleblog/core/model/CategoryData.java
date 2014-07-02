@@ -12,9 +12,13 @@ public class CategoryData {
 
     private String name;
 
-    private List<String> titleList = new ArrayList<>();
+    private List<BlogData> blogList = new ArrayList<>();
 
     private MutableInt count = new MutableInt(0);
+
+    public CategoryData(String category) {
+        name = category;
+    }
 
     public String getName() {
         return name;
@@ -24,19 +28,21 @@ public class CategoryData {
         this.name = name;
     }
 
-    public List<String> getTitleList() {
-        return titleList;
-    }
-
-    public void addTitle(String title) {
-        this.titleList.add(title);
+    public List<BlogData> getBlogList() {
+        return blogList;
     }
 
     public MutableInt getCount() {
         return count;
     }
 
-    public void incCount() {
+    public void increment() {
         this.count.increment();
+    }
+
+    public CategoryData addBlog(BlogData blogData) {
+        blogList.add(blogData);
+        increment();
+        return this;
     }
 }

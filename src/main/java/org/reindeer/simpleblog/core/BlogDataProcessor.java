@@ -49,9 +49,9 @@ public class BlogDataProcessor implements ApplicationListener<ContextRefreshedEv
         Configuration configuration = freeMarkerConfigurer.getConfiguration();
         try {
             configuration.setSharedVariable("categoryCount", repository.getCategoryCount());
-            configuration.setSharedVariable("timeCount", repository.getTimeCount());
+            configuration.setSharedVariable("archiveCount", repository.getArchiveCount());
             configuration.setSharedVariable("recentTitles", repository.getRecentTitles(10));
-            configuration.setSharedVariable("site",siteConfig.properties());
+            configuration.setSharedVariable("site", siteConfig.properties());
         } catch (TemplateModelException e) {
             logger.error("error", e);
         }

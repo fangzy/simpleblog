@@ -25,11 +25,17 @@ public interface BlogRepository {
 
     TreeMap<String,MutableInt> getCategoryCount();
 
-    HashMap<String,MutableInt> getTimeCount();
+    HashMap<String, MutableInt> getArchiveCount();
 
     String[] getRecentTitles(int i);
 
     PageView getPageView(int index,int pageSize);
 
     CategoryView getCategoryView(String id);
+
+    CategoryView getCategoryView();
+
+    CategoryView getArchiveView(String format);
+
+    CategoryView getArchiveView();
 }

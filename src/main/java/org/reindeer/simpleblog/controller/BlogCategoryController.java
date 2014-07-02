@@ -23,14 +23,17 @@ public class BlogCategoryController {
 
     @RequestMapping("/category*")
     public void index(Model model) {
-//        model.addAttribute("content","category");
-        logger.info("visited category index");
+        logger.debug("visited category index");
+        CategoryView view = repository.getCategoryView();
+        model.addAttribute("view", view);
     }
 
     @RequestMapping("/category/{id}")
-    public void category(@PathVariable("id") String id, Model model) {
+    public String category(@PathVariable("id") String id, Model model) {
         logger.debug("visited category " + id);
         CategoryView view = repository.getCategoryView(id);
+        model.addAttribute("view", view);
+        return "category";
     }
 
 }

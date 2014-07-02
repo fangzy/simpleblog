@@ -5,5 +5,13 @@ package org.reindeer.simpleblog;
  */
 public class Constant {
 
-    public static final int PAGE_SIZE=5;
+    /**
+     * default page size
+     */
+    public static final int PAGE_SIZE = 5;
+
+    /**
+     * default random title quantity
+     */
+    public static final int RANDOM_NO = 5;
 }
