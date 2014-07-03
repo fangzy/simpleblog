@@ -15,16 +15,19 @@ import java.util.Properties;
 public class SiteConfig {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
+    private Properties properties = new Properties();
 
-    public SiteConfig(Resource resource){
-        try {
-            properties.load(new InputStreamReader(resource.getInputStream(),"UTF-8"));
-        } catch (IOException e) {
-            logger.error("Can't load settings.",e);
-        }
+    public SiteConfig() {
+
     }
 
-    protected Properties properties = new Properties();
+    public SiteConfig(Resource resource) {
+        try {
+            properties.load(new InputStreamReader(resource.getInputStream(), "UTF-8"));
+        } catch (IOException e) {
+            logger.error("Can't load settings.", e);
+        }
+    }
 
     public String get(String key) {
         return properties.getProperty(key);
@@ -34,7 +37,7 @@ public class SiteConfig {
         this.properties.put(key, value);
     }
 
-    public Hashtable<Object,Object> properties(){
+    public Hashtable<Object, Object> properties() {
         return properties;
     }
 }

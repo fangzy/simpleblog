@@ -65,7 +65,10 @@ public class MarkdownFileReader extends BlogDataReader {
         List<BlogData> list = new ArrayList<>();
         for (int i = 0, n = files.size(); i < n; i++) {
             try {
-                list.add(completionService.take().get());
+                BlogData data = completionService.take().get();
+                if (data != null) {
+                    list.add(data);
+                }
             } catch (InterruptedException | ExecutionException e) {
                 logger.error(null, e);
             }
@@ -154,13 +157,17 @@ public class MarkdownFileReader extends BlogDataReader {
                     headerEnd = true;
                 }
             }
+            if (blog.getTitle() == null || "".equals(blog.getTitle())) {
+                logger.warn("Wrong file with no title.");
+                return null;
+            }
             BasicFileAttributes attr = Files.readAttributes(file, BasicFileAttributes.class);
             String dateStr = file.getFileName().toString().substring(0, 10);
             blog.setCreated(df.parse(dateStr));
             blog.setLastModified(new Date(attr.lastModifiedTime().toMillis()));
             blog.setContent(convert.convert(body.toString()));
-            String category=blog.getCategory();
-            if("".equals(category)){
+            String category = blog.getCategory();
+            if ("".equals(category)) {
                 blog.setCategory("default");
             }
             logger.debug(blog.getTitle() + " has been read.");
