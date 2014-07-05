@@ -23,7 +23,7 @@ public class BlogIndexController {
     private BlogRepository repository;
 
     @RequestMapping(value = {"/", "index*"})
-    public String index(Model model) {
+    public String getIndex(Model model) {
         logger.debug("visited index");
         PageView view = repository.getPageView(1, Constant.PAGE_SIZE);
         model.addAttribute("view",view);
@@ -31,7 +31,7 @@ public class BlogIndexController {
     }
 
     @RequestMapping(value = "/page/{id}")
-    public String page(@PathVariable int id , Model model) {
+    public String getPage(@PathVariable int id, Model model) {
         logger.debug("visited page:" + id);
         PageView view = repository.getPageView(id,Constant.PAGE_SIZE);
         model.addAttribute("view",view);

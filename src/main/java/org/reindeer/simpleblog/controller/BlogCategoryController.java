@@ -22,14 +22,14 @@ public class BlogCategoryController {
     private BlogRepository repository;
 
     @RequestMapping("/category*")
-    public void index(Model model) {
+    public void getIndex(Model model) {
         logger.debug("visited category index");
         CategoryView view = repository.getCategoryView();
         model.addAttribute("view", view);
     }
 
     @RequestMapping("/category/{id}")
-    public String category(@PathVariable("id") String id, Model model) {
+    public String getCategory(@PathVariable("id") String id, Model model) {
         logger.debug("visited category " + id);
         CategoryView view = repository.getCategoryView(id);
         model.addAttribute("view", view);

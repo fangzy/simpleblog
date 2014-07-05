@@ -28,7 +28,7 @@ public class BlogArchiveController {
     private BlogRepository repository;
 
     @RequestMapping("/archives*")
-    public String index(Model model) {
+    public String getIndex(Model model) {
         logger.debug("visited archives index");
         CategoryView view = repository.getArchiveView();
         model.addAttribute("view", view);
@@ -36,7 +36,7 @@ public class BlogArchiveController {
     }
 
     @RequestMapping("/archives/{year}/{month}")
-    public String category(@PathVariable("year") int year, @PathVariable("month") int month, Model model) {
+    public String getArchive(@PathVariable("year") int year, @PathVariable("month") int month, Model model) {
         logger.debug("visited archives " + year + "-" + month);
         Calendar calendar = Calendar.getInstance();
         calendar.set(year, month - 1, 1);

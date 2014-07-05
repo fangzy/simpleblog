@@ -139,6 +139,7 @@ public class BlogCache {
             subList.addAll(blogDataList.subList(0, i));
         } else {
             subList.addAll(blogDataList);
+            i = size;
         }
         for (int m = 0; m < i; m++) {
             recentArray[m] = subList.get(m).getTitle();
@@ -150,7 +151,7 @@ public class BlogCache {
         return categoryDataMap;
     }
 
-    public CategoryData getCategoryDataMap(String name) {
+    public CategoryData getCategoryData(String name) {
         return categoryDataMap.get(name);
     }
 
@@ -162,7 +163,7 @@ public class BlogCache {
         return archiveDataMap;
     }
 
-    public CategoryData getArchiveDataMap(String dateStr) {
+    public CategoryData getArchiveData(String dateStr) {
         return archiveDataMap.get(dateStr);
     }
 

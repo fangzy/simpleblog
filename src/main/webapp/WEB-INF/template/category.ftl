@@ -18,7 +18,7 @@
                 <div class="col-md-12">
                     <ul>
                         [#list clist.blogList as blist]
-                            <li>${blist.created?string("MMMMM d,yyyy")} - <a
+                            <li>${blist.created?string("yyyy-MM-dd")} - <a
                                     href="/${site.blogPostKey}/${blist.title?url}">${blist.title}</a></li>
                         [/#list]
                     </ul>

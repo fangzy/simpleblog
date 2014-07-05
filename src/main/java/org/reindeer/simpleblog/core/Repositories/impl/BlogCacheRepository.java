@@ -5,8 +5,8 @@ import org.reindeer.simpleblog.Constant;
 import org.reindeer.simpleblog.core.Repositories.BlogCache;
 import org.reindeer.simpleblog.core.Repositories.BlogRepository;
 import org.reindeer.simpleblog.core.model.*;
+import org.reindeer.simpleblog.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,7 +41,7 @@ public class BlogCacheRepository implements BlogRepository {
         BlogView blogView = new BlogView();
         BlogData blogData = get(title);
         if (blogData == null) {
-            throw new IllegalArgumentException("Can't find any blog.");
+            throw new ResourceNotFoundException("Can't find any blog.");
         }
         blogView.setBlogData(blogData);
         blogView.setNextTitle(cache.getNextTitle(blogData));
@@ -67,14 +67,13 @@ public class BlogCacheRepository implements BlogRepository {
 
     @Override
     public PageView getPageView(int index,int pageSize) {
-        Assert.isTrue(index > 0 ,"Index must be bigger than zero.");
         PageView pageView = new PageView();
         List<BlogData> blogDataList = new ArrayList<>();
         blogDataList.addAll(cache.getBlogDataList());
         int totalSize=blogDataList.size();
         int currentPos=(index-1)*pageSize;
         if (totalSize<currentPos+1){
-            throw new IllegalArgumentException("Wrong page no.");
+            throw new ResourceNotFoundException("Wrong page no.");
         }
         int endPos = currentPos + pageSize;
         if(totalSize<endPos){
@@ -93,8 +92,11 @@ public class BlogCacheRepository implements BlogRepository {
 
     @Override
     public CategoryView getCategoryView(String id) {
+        CategoryData categoryData = cache.getCategoryData(id);
+        if (categoryData == null) {
+            throw new ResourceNotFoundException("Can't find category");
+        }
         CategoryView view = new CategoryView();
-        CategoryData categoryData = cache.getCategoryDataMap(id);
         view.addCategory(categoryData);
         view.setRandomTitles(cache.getRandomTitles(Constant.RANDOM_NO));
         return view;
@@ -113,8 +115,11 @@ public class BlogCacheRepository implements BlogRepository {
 
     @Override
     public CategoryView getArchiveView(String dateStr) {
+        CategoryData categoryData = cache.getArchiveData(dateStr);
+        if (categoryData == null) {
+            throw new ResourceNotFoundException("Can't find archive");
+        }
         CategoryView view = new CategoryView();
-        CategoryData categoryData = cache.getArchiveDataMap(dateStr);
         view.addCategory(categoryData);
         view.setRandomTitles(cache.getRandomTitles(Constant.RANDOM_NO));
         return view;

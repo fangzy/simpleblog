@@ -20,6 +20,11 @@ public abstract class BlogDataReader {
         this.convert = convert;
     }
 
+    /**
+     * read blog data
+     *
+     * @return list of blog
+     */
     public abstract List<BlogData> read();
 
 }
