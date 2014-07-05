@@ -126,13 +126,12 @@ public class BlogCache {
             }
             randomArray = randomTitles.toArray(randomArray);
         } else {
-            blogDataMap.keySet().toArray(randomArray);
+            randomArray = blogDataMap.keySet().toArray(new String[0]);
         }
         return randomArray;
     }
 
     public String[] getRecentTitles(int i) {
-        String[] recentArray = new String[i];
         int size = blogDataList.size();
         List<BlogData> subList = new ArrayList<>();
         if (i < size) {
@@ -141,6 +140,7 @@ public class BlogCache {
             subList.addAll(blogDataList);
             i = size;
         }
+        String[] recentArray = new String[i];
         for (int m = 0; m < i; m++) {
             recentArray[m] = subList.get(m).getTitle();
         }

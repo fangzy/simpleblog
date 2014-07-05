@@ -33,14 +33,17 @@ public class ProcessTimeInterceptor implements HandlerInterceptor {
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
         long completeTime = System.nanoTime();
-        long preTime = preTimeThreadLocal.get();
-        long postTime = postTimeThreadLocal.get();
+        Long preTime = preTimeThreadLocal.get();
+        Long postTime = postTimeThreadLocal.get();
+        if (preTime == null || postTime == null) {
+            return;
+        }
         preTimeThreadLocal.remove();
         postTimeThreadLocal.remove();
-        Writer writer =response.getWriter();
-        writer.write("<!--controllerTime:" + (float)(postTime - preTime)/1000000+"ms -->");
-        writer.write("<!--viewTime:" +(float)(completeTime-postTime)/1000000+"ms -->");
-        writer.write("<!--totalTime:" +(float)(completeTime-preTime)/1000000+"ms -->");
+        Writer writer = response.getWriter();
+        writer.write("<!--controllerTime:" + (float) (postTime - preTime) / 1000000 + "ms -->");
+        writer.write("<!--viewTime:" + (float) (completeTime - postTime) / 1000000 + "ms -->");
+        writer.write("<!--totalTime:" + (float) (completeTime - preTime) / 1000000 + "ms -->");
         writer.flush();
     }
 }

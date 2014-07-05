@@ -79,7 +79,7 @@ public class BlogCacheRepository implements BlogRepository {
         if(totalSize<endPos){
             endPos = totalSize;
         }
-        int totalPage = (int) Math.ceil(totalSize/pageSize);
+        int totalPage = (int) Math.ceil(totalSize / pageSize) + 1;
 
         List<BlogData> subList = blogDataList.subList(currentPos,endPos);
         pageView.setBlogDataList(subList);
