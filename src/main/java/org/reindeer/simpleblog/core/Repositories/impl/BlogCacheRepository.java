@@ -66,22 +66,22 @@ public class BlogCacheRepository implements BlogRepository {
     }
 
     @Override
-    public PageView getPageView(int index,int pageSize) {
+    public PageView getPageView(int index, int pageSize) {
         PageView pageView = new PageView();
         List<BlogData> blogDataList = new ArrayList<>();
         blogDataList.addAll(cache.getBlogDataList());
-        int totalSize=blogDataList.size();
-        int currentPos=(index-1)*pageSize;
-        if (totalSize<currentPos+1){
+        int totalSize = blogDataList.size();
+        int currentPos = (index - 1) * pageSize;
+        if (totalSize < currentPos + 1) {
             throw new ResourceNotFoundException("Wrong page no.");
         }
         int endPos = currentPos + pageSize;
-        if(totalSize<endPos){
+        if (totalSize < endPos) {
             endPos = totalSize;
         }
-        int totalPage = (int) Math.ceil(totalSize / pageSize) + 1;
+        int totalPage = (int) Math.ceil(totalSize / pageSize) + (totalSize % pageSize == 0 ? 0 : 1);
 
-        List<BlogData> subList = blogDataList.subList(currentPos,endPos);
+        List<BlogData> subList = blogDataList.subList(currentPos, endPos);
         pageView.setBlogDataList(subList);
         pageView.setPageSize(pageSize);
         pageView.setPageCurrent(index);

@@ -131,9 +131,9 @@ public class BlogData implements Comparable<BlogData> {
 
     @Override
     public int compareTo(BlogData o) {
-        int result=this.getCreated().compareTo(o.getCreated());
-        if(result==0){
-            result=this.getTitle().compareTo(o.getTitle());
+        int result = this.getCreated().compareTo(o.getCreated());
+        if (result == 0) {
+            result = this.getTitle().compareTo(o.getTitle());
         }
         return result;
     }

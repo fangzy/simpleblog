@@ -25,7 +25,7 @@ public class BlogContentController {
 
     @RequestMapping(value = "{title:.*}", method = RequestMethod.GET)
     public String getBlog(@PathVariable String title, Model model) {
-        logger.debug("Request:"+title);
+        logger.debug("Request:" + title);
         BlogView view = repository.getBlogView(title);
         model.addAttribute("view", view);
         return "blog";

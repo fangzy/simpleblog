@@ -23,13 +23,13 @@ public interface BlogRepository {
 
     BlogView getBlogView(String title);
 
-    TreeMap<String,MutableInt> getCategoryCount();
+    TreeMap<String, MutableInt> getCategoryCount();
 
     HashMap<String, MutableInt> getArchiveCount();
 
     String[] getRecentTitles(int i);
 
-    PageView getPageView(int index,int pageSize);
+    PageView getPageView(int index, int pageSize);
 
     CategoryView getCategoryView(String id);
 

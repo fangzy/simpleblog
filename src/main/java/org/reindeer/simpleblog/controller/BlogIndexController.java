@@ -26,15 +26,15 @@ public class BlogIndexController {
     public String getIndex(Model model) {
         logger.debug("visited index");
         PageView view = repository.getPageView(1, Constant.PAGE_SIZE);
-        model.addAttribute("view",view);
+        model.addAttribute("view", view);
         return "home";
     }
 
     @RequestMapping(value = "/page/{id}")
     public String getPage(@PathVariable int id, Model model) {
         logger.debug("visited page:" + id);
-        PageView view = repository.getPageView(id,Constant.PAGE_SIZE);
-        model.addAttribute("view",view);
+        PageView view = repository.getPageView(id, Constant.PAGE_SIZE);
+        model.addAttribute("view", view);
         return "home";
     }
 
