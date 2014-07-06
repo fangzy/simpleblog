@@ -1,12 +1,13 @@
 package org.reindeer.simpleblog.core.Repositories.impl;
 
+import freemarker.template.Configuration;
+import freemarker.template.TemplateModelException;
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.reindeer.simpleblog.Constant;
 import org.reindeer.simpleblog.core.Repositories.BlogCache;
 import org.reindeer.simpleblog.core.Repositories.BlogRepository;
 import org.reindeer.simpleblog.core.model.*;
 import org.reindeer.simpleblog.exception.ResourceNotFoundException;
-import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,23 +17,16 @@ import java.util.TreeMap;
 /**
  * Created by fzy on 2014/6/27.
  */
-@Repository
 public class BlogCacheRepository implements BlogRepository {
 
     private BlogCache cache = new BlogCache();
-
-    @Override
-    public void put(BlogData blogData) {
-        cache.put(blogData);
-    }
 
     @Override
     public void init(List<BlogData> blogDataList) {
         cache.init(blogDataList);
     }
 
-    @Override
-    public BlogData get(String title) {
+    private BlogData get(String title) {
         return cache.get(title);
     }
 
@@ -50,18 +44,15 @@ public class BlogCacheRepository implements BlogRepository {
         return blogView;
     }
 
-    @Override
-    public TreeMap<String, MutableInt> getCategoryCount() {
+    private TreeMap<String, MutableInt> getCategoryCount() {
         return cache.getCategoryCountMap();
     }
 
-    @Override
-    public HashMap<String, MutableInt> getArchiveCount() {
+    private HashMap<String, MutableInt> getArchiveCount() {
         return cache.getArchiveCountMap();
     }
 
-    @Override
-    public String[] getRecentTitles(int i) {
+    private String[] getRecentTitles(int i) {
         return cache.getRecentTitles(i);
     }
 
@@ -134,6 +125,13 @@ public class BlogCacheRepository implements BlogRepository {
         }
         view.setRandomTitles(cache.getRandomTitles(Constant.RANDOM_NO));
         return view;
+    }
+
+    @Override
+    public void setFreeMarkerVariables(Configuration configuration) throws TemplateModelException {
+        configuration.setSharedVariable("categoryCount", getCategoryCount());
+        configuration.setSharedVariable("archiveCount", getArchiveCount());
+        configuration.setSharedVariable("recentTitles", getRecentTitles(10));
     }
 
 }
