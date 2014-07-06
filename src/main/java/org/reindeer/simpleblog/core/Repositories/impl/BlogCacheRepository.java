@@ -1,7 +1,6 @@
 package org.reindeer.simpleblog.core.Repositories.impl;
 
 import org.apache.commons.lang3.mutable.MutableInt;
-import org.reindeer.simpleblog.Constant;
 import org.reindeer.simpleblog.core.Repositories.BlogCache;
 import org.reindeer.simpleblog.core.Repositories.BlogRepository;
 import org.reindeer.simpleblog.core.model.BlogData;
@@ -27,7 +26,7 @@ public class BlogCacheRepository extends BlogRepository {
 
     @Override
     protected String[] getRandomTitles(int i) {
-        return cache.getRandomTitles(Constant.RANDOM_NO);
+        return cache.getRandomTitles(i);
     }
 
     @Override
