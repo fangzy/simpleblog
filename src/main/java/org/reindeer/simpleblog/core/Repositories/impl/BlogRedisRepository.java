@@ -1,13 +1,10 @@
 package org.reindeer.simpleblog.core.Repositories.impl;
 
-import freemarker.template.Configuration;
-import freemarker.template.TemplateModelException;
 import org.apache.commons.lang3.mutable.MutableInt;
-import org.reindeer.simpleblog.Constant;
 import org.reindeer.simpleblog.core.Repositories.BlogRepository;
-import org.reindeer.simpleblog.core.model.*;
+import org.reindeer.simpleblog.core.model.BlogData;
+import org.reindeer.simpleblog.core.model.CategoryData;
 import org.reindeer.simpleblog.core.util.JedisProxy;
-import org.reindeer.simpleblog.exception.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -24,7 +21,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * Created by fzy on 2014/6/27.
  */
 @Repository
-public class BlogRedisRepository implements BlogRepository {
+public class BlogRedisRepository extends BlogRepository {
 
     private static final String BLOG_LIST_KEY = "blog:list:%s";
     private static final String BLOG_CATEGORY_KEY = "blog:category:%s";
@@ -57,27 +54,15 @@ public class BlogRedisRepository implements BlogRepository {
         pipeline.sync();
     }
 
-    private BlogData get(String title) {
+    @Override
+    protected BlogData get(String title) {
         Jedis jedis = JedisProxy.create();
         Map<String, String> map = jedis.hgetAll(String.format(BLOG_DATA_KEY, title));
         return BlogData.valueOf(map);
     }
 
     @Override
-    public BlogView getBlogView(String title) {
-        BlogView blogView = new BlogView();
-        BlogData blogData = get(title);
-        if (blogData == null) {
-            throw new ResourceNotFoundException("Can't find any blog.");
-        }
-        blogView.setBlogData(blogData);
-        blogView.setNextTitle(getNextTitle(blogData));
-        blogView.setPrevTitle(getPrevTitle(blogData));
-        blogView.setRandomTitles(getRandomTitles(Constant.RANDOM_NO));
-        return blogView;
-    }
-
-    private String[] getRandomTitles(int i) {
+    protected String[] getRandomTitles(int i) {
         Jedis jedis = JedisProxy.create();
         List<String> randomTitles = new ArrayList<>();
         String[] randomArray = new String[i];
@@ -100,7 +85,8 @@ public class BlogRedisRepository implements BlogRepository {
         return randomArray;
     }
 
-    private String getPrevTitle(BlogData blogData) {
+    @Override
+    protected String getPrevTitle(BlogData blogData) {
         Jedis jedis = JedisProxy.create();
         String listKey = String.format(BLOG_LIST_KEY, "all");
         String prevTitle = null;
@@ -111,7 +97,8 @@ public class BlogRedisRepository implements BlogRepository {
         return prevTitle;
     }
 
-    private String getNextTitle(BlogData blogData) {
+    @Override
+    protected String getNextTitle(BlogData blogData) {
         Jedis jedis = JedisProxy.create();
         String listKey = String.format(BLOG_LIST_KEY, "all");
         String nextTitle = null;
@@ -122,7 +109,8 @@ public class BlogRedisRepository implements BlogRepository {
         return nextTitle;
     }
 
-    private TreeMap<String, MutableInt> getCategoryCount() {
+    @Override
+    protected TreeMap<String, MutableInt> getCategoryCount() {
         Jedis jedis = JedisProxy.create();
         TreeMap<String, MutableInt> categoryCountMap = new TreeMap<>();
         Set<String> categorySet = jedis.smembers(String.format(BLOG_LIST_KEY, "category"));
@@ -132,7 +120,8 @@ public class BlogRedisRepository implements BlogRepository {
         return categoryCountMap;
     }
 
-    private HashMap<String, MutableInt> getArchiveCount() {
+    @Override
+    protected HashMap<String, MutableInt> getArchiveCount() {
         Jedis jedis = JedisProxy.create();
         HashMap<String, MutableInt> archiveCountMap = new LinkedHashMap<>();
         Set<String> archiveSet = jedis.zrevrange(String.format(BLOG_LIST_KEY, "time"), 0, -1);
@@ -142,7 +131,8 @@ public class BlogRedisRepository implements BlogRepository {
         return archiveCountMap;
     }
 
-    private String[] getRecentTitles(int i) {
+    @Override
+    protected String[] getRecentTitles(int i) {
         Jedis jedis = JedisProxy.create();
         String listKey = String.format(BLOG_LIST_KEY, "all");
         int size = jedis.zcard(listKey).intValue();
@@ -157,64 +147,37 @@ public class BlogRedisRepository implements BlogRepository {
     }
 
     @Override
-    public PageView getPageView(int index, int pageSize) {
+    protected List<BlogData> getSubList(int currentPos, int endPos) {
         Jedis jedis = JedisProxy.create();
         String listKey = String.format(BLOG_LIST_KEY, "all");
-
-        PageView pageView = new PageView();
-        int totalSize = jedis.zcard(listKey).intValue();
-        int currentPos = (index - 1) * pageSize;
-        if (totalSize < currentPos + 1) {
-            throw new ResourceNotFoundException("Wrong page no.");
-        }
-        int endPos = currentPos + pageSize;
-        if (totalSize < endPos) {
-            endPos = totalSize;
-        }
-        int totalPage = (int) Math.ceil(totalSize / pageSize) + (totalSize % pageSize == 0 ? 0 : 1);
-
         List<BlogData> blogDataList = new ArrayList<>();
         Set<String> blogTitleList = jedis.zrevrange(listKey, currentPos, endPos - 1);
         for (String title : blogTitleList) {
             blogDataList.add(get(title));
         }
-        pageView.setBlogDataList(blogDataList);
-        pageView.setPageSize(pageSize);
-        pageView.setPageCurrent(index);
-        pageView.setPageTotal(totalPage);
-        pageView.setRandomTitles(getRandomTitles(Constant.RANDOM_NO));
-        return pageView;
+        return blogDataList;
     }
 
     @Override
-    public CategoryView getCategoryView(String id) {
-        CategoryData categoryData = getCategoryData(id);
-        if (categoryData == null) {
-            throw new ResourceNotFoundException("Can't find category");
-        }
-        CategoryView view = new CategoryView();
-        view.addCategory(categoryData);
-        view.setRandomTitles(getRandomTitles(Constant.RANDOM_NO));
-        return view;
-    }
-
-    @Override
-    public CategoryView getCategoryView() {
+    protected int getTotalSize() {
         Jedis jedis = JedisProxy.create();
-        CategoryView view = new CategoryView();
+        String listKey = String.format(BLOG_LIST_KEY, "all");
+        return jedis.zcard(listKey).intValue();
+    }
+
+    @Override
+    protected TreeMap<String, CategoryData> getCategoryDataMap() {
+        Jedis jedis = JedisProxy.create();
         Set<String> categories = jedis.smembers(String.format(BLOG_LIST_KEY, "category"));
         TreeMap<String, CategoryData> categoryDataMap = new TreeMap<>();
         for (String category : categories) {
             categoryDataMap.put(category, getCategoryData(category));
         }
-        for (CategoryData categoryData : categoryDataMap.values()) {
-            view.addCategory(categoryData);
-        }
-        view.setRandomTitles(getRandomTitles(Constant.RANDOM_NO));
-        return view;
+        return categoryDataMap;
     }
 
-    private CategoryData getCategoryData(String id) {
+    @Override
+    protected CategoryData getCategoryData(String id) {
         Jedis jedis = JedisProxy.create();
         CategoryData categoryData = new CategoryData(id);
         Set<String> titles = jedis.zrevrange(String.format(BLOG_CATEGORY_KEY, id), 0, -1);
@@ -225,34 +188,18 @@ public class BlogRedisRepository implements BlogRepository {
     }
 
     @Override
-    public CategoryView getArchiveView(String dateStr) {
-        CategoryData categoryData = getArchiveData(dateStr);
-        if (categoryData == null) {
-            throw new ResourceNotFoundException("Can't find archive");
-        }
-        CategoryView view = new CategoryView();
-        view.addCategory(categoryData);
-        view.setRandomTitles(getRandomTitles(Constant.RANDOM_NO));
-        return view;
-    }
-
-    @Override
-    public CategoryView getArchiveView() {
+    protected HashMap<String, CategoryData> getArchiveDataMap() {
         Jedis jedis = JedisProxy.create();
-        CategoryView view = new CategoryView();
         HashMap<String, CategoryData> archiveDataMap = new LinkedHashMap<>();
         Set<String> archives = jedis.zrevrange(String.format(BLOG_LIST_KEY, "time"), 0, -1);
         for (String archive : archives) {
             archiveDataMap.put(archive, getArchiveData(archive));
         }
-        for (CategoryData categoryData : archiveDataMap.values()) {
-            view.addCategory(categoryData);
-        }
-        view.setRandomTitles(getRandomTitles(Constant.RANDOM_NO));
-        return view;
+        return archiveDataMap;
     }
 
-    private CategoryData getArchiveData(String id) {
+    @Override
+    protected CategoryData getArchiveData(String id) {
         Jedis jedis = JedisProxy.create();
         CategoryData categoryData = new CategoryData(id);
         Set<String> titles = jedis.zrevrange(String.format(BLOG_TIME_KEY, id), 0, -1);
@@ -263,10 +210,18 @@ public class BlogRedisRepository implements BlogRepository {
     }
 
     @Override
-    public void setFreeMarkerVariables(Configuration configuration) throws TemplateModelException {
-        configuration.setSharedVariable("categoryCount", getCategoryCount());
-        configuration.setSharedVariable("archiveCount", getArchiveCount());
-        configuration.setSharedVariable("recentTitles", getRecentTitles(10));
+    public Map<String, Object> getFreeMarkerVariables() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("categoryCount", getCategoryCount());
+        map.put("archiveCount", getArchiveCount());
+        map.put("recentTitles", getRecentTitles(10));
+        return map;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        Jedis jedis = JedisProxy.create();
+        return jedis.zcard(String.format(BLOG_LIST_KEY, "all")) == 0;
     }
 
 }

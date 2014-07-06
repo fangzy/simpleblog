@@ -126,7 +126,7 @@ public class BlogCache {
             }
             randomArray = randomTitles.toArray(randomArray);
         } else {
-            randomArray = blogDataMap.keySet().toArray(new String[0]);
+            randomArray = blogDataMap.keySet().toArray(new String[size]);
         }
         return randomArray;
     }

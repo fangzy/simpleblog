@@ -36,8 +36,7 @@ public class AppConfig {
 
     @Bean
     public SiteConfig siteConfig() {
-        SiteConfig siteConfig = new SiteConfig(siteSettings);
-        return siteConfig;
+        return new SiteConfig(siteSettings);
     }
 
     @Bean
@@ -66,8 +65,7 @@ public class AppConfig {
 
         String host = properties.getProperty("redis.host");
         int port = Integer.parseInt(properties.getProperty("redis.port"));
-        JedisPool jedisPool = new JedisPool(jedisPoolConfig, host, port);
-        return jedisPool;
+        return new JedisPool(jedisPoolConfig, host, port);
     }
 
 }

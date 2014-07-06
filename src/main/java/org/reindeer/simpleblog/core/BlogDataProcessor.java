@@ -1,6 +1,7 @@
 package org.reindeer.simpleblog.core;
 
 import freemarker.template.Configuration;
+import freemarker.template.SimpleHash;
 import freemarker.template.TemplateModelException;
 import org.reindeer.simpleblog.core.Repositories.BlogRepository;
 import org.reindeer.simpleblog.core.model.BlogData;
@@ -38,9 +39,10 @@ public class BlogDataProcessor implements ApplicationListener<ContextRefreshedEv
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         if (event.getApplicationContext().getParent() == null) {
-            //TODO 检查最后修改日期
             logger.debug("Refresh event was triggered.");
-            refreshBlogData();
+            if (repository.isEmpty()) {
+                refreshBlogData();
+            }
             setFreeMarkerVariables();
         }
     }
@@ -48,7 +50,7 @@ public class BlogDataProcessor implements ApplicationListener<ContextRefreshedEv
     private void setFreeMarkerVariables() {
         Configuration configuration = freeMarkerConfigurer.getConfiguration();
         try {
-            repository.setFreeMarkerVariables(configuration);
+            configuration.setAllSharedVariables(new SimpleHash(repository.getFreeMarkerVariables()));
             configuration.setSharedVariable("site", siteConfig.properties());
         } catch (TemplateModelException e) {
             logger.error("error", e);
