@@ -15,7 +15,7 @@ import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
 @Configuration
 @EnableWebMvc
 @ComponentScan("org.reindeer.simpleblog.controller")
-public class MvcConfig extends WebMvcConfigurerAdapter{
+public class MvcConfig extends WebMvcConfigurerAdapter {
 
     @Bean
     public FreeMarkerViewResolver viewResolver() {

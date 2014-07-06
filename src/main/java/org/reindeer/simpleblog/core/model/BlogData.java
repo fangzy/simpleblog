@@ -1,8 +1,14 @@
 package org.reindeer.simpleblog.core.model;
 
 import org.springframework.cglib.beans.BeanMap;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by fzy on 2014/6/25.
@@ -19,11 +25,29 @@ public class BlogData implements Comparable<BlogData> {
 
     private String tags;
 
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private Date created;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date lastModified;
 
     private String content;
+
+    public static BlogData valueOf(Map<String, String> map) {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        BlogData blogData = new BlogData();
+        blogData.setTitle(map.get("title"));
+        blogData.setDescription(map.get("description"));
+        blogData.setCategory(map.get("category"));
+        blogData.setContent(map.get("content"));
+        try {
+            blogData.setCreated(dateFormat.parse(map.get("created")));
+            blogData.setLastModified(dateFormat.parse(map.get("lastModified")));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return blogData;
+    }
 
     public String getTitle() {
         return title;
@@ -131,10 +155,22 @@ public class BlogData implements Comparable<BlogData> {
 
     @Override
     public int compareTo(BlogData o) {
-        int result=this.getCreated().compareTo(o.getCreated());
-        if(result==0){
-            result=this.getTitle().compareTo(o.getTitle());
+        int result = this.getCreated().compareTo(o.getCreated());
+        if (result == 0) {
+            result = this.getTitle().compareTo(o.getTitle());
         }
         return result;
+    }
+
+    public Map<String, String> toMap() {
+        Map<String, String> map = new HashMap<>();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        map.put("title", getTitle());
+//        map.put("description",getDescription());
+        map.put("category", getCategory());
+        map.put("content", getContent());
+        map.put("created", dateFormat.format(getCreated()));
+        map.put("lastModified", dateFormat.format(getLastModified()));
+        return map;
     }
 }
