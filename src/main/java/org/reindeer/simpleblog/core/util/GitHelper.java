@@ -3,8 +3,6 @@ package org.reindeer.simpleblog.core.util;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.PullResult;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.api.errors.InvalidRemoteException;
-import org.eclipse.jgit.api.errors.TransportException;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
@@ -13,16 +11,20 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by fzy on 2014/7/6.
  */
 public class GitHelper {
 
-    private static Logger logger = LoggerFactory.getLogger(GitHelper.class);
+    private static final Logger logger = LoggerFactory.getLogger(GitHelper.class);
+
+    private static final Pattern PREFIX_ENV = Pattern.compile("[%|\\$][\\{]?(.*?)[\\}|%]?[\\\\/](.*)");
 
     public static void cloneRemoteRepository(String localPath, String remoteUrl) {
-        File path = new File(localPath);
+        File path = new File(getRealPath(localPath));
         if (!path.exists()) {
             path.mkdirs();
         }
@@ -41,19 +43,25 @@ public class GitHelper {
                         .setDirectory(path)
                         .call();
             }
-        } catch (IOException e) {
-            logger.error("An unexpected error occurred.", e);
-        } catch (InvalidRemoteException e) {
-            logger.error("An unexpected error occurred.", e);
-        } catch (TransportException e) {
-            logger.error("An unexpected error occurred.", e);
-        } catch (GitAPIException e) {
+        } catch (IOException | GitAPIException e) {
             logger.error("An unexpected error occurred.", e);
         } finally {
             if (repository != null) {
                 repository.close();
             }
         }
+    }
+
+    public static String getRealPath(String localPath) {
+        String realPath = localPath;
+        if (!localPath.endsWith(File.separator)) {
+            localPath = localPath + File.separator;
+        }
+        Matcher matcher = PREFIX_ENV.matcher(localPath);
+        if (matcher.find() && matcher.groupCount() == 2) {
+            realPath = System.getenv(matcher.group(1)) + File.separator + matcher.group(2);
+        }
+        return realPath;
     }
 
     public static void pullRemoteRepository(String localPath) {

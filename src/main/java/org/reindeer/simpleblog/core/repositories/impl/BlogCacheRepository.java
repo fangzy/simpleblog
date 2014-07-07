@@ -1,10 +1,10 @@
-package org.reindeer.simpleblog.core.Repositories.impl;
+package org.reindeer.simpleblog.core.repositories.impl;
 
 import org.apache.commons.lang3.mutable.MutableInt;
-import org.reindeer.simpleblog.core.Repositories.BlogCache;
-import org.reindeer.simpleblog.core.Repositories.BlogRepository;
 import org.reindeer.simpleblog.core.model.BlogData;
 import org.reindeer.simpleblog.core.model.CategoryData;
+import org.reindeer.simpleblog.core.repositories.BlogCache;
+import org.reindeer.simpleblog.core.repositories.BlogRepository;
 
 import java.util.*;
 

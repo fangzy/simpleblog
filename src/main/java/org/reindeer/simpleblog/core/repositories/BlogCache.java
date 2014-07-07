@@ -1,4 +1,4 @@
-package org.reindeer.simpleblog.core.Repositories;
+package org.reindeer.simpleblog.core.repositories;
 
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.reindeer.simpleblog.core.model.BlogData;
