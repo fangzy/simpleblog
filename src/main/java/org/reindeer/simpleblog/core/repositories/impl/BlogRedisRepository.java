@@ -10,7 +10,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Pipeline;
+import redis.clients.jedis.Tuple;
 
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -180,9 +182,12 @@ public class BlogRedisRepository extends BlogRepository {
     protected CategoryData getCategoryData(String id) {
         Jedis jedis = JedisProxy.create();
         CategoryData categoryData = new CategoryData(id);
-        Set<String> titles = jedis.zrevrange(String.format(BLOG_CATEGORY_KEY, id), 0, -1);
-        for (String title : titles) {
-            categoryData.addBlog(get(title));
+        Set<Tuple> titlesWithTimes = jedis.zrevrangeWithScores(String.format(BLOG_CATEGORY_KEY, id), 0, -1);
+        for (Tuple titlesWithTime : titlesWithTimes) {
+            BlogData blogData = new BlogData();
+            blogData.setTitle(titlesWithTime.getElement());
+            blogData.setCreated(new Date(new BigDecimal(titlesWithTime.getScore()).longValue()));
+            categoryData.addBlog(blogData);
         }
         return categoryData;
     }
@@ -202,9 +207,12 @@ public class BlogRedisRepository extends BlogRepository {
     protected CategoryData getArchiveData(String id) {
         Jedis jedis = JedisProxy.create();
         CategoryData categoryData = new CategoryData(id);
-        Set<String> titles = jedis.zrevrange(String.format(BLOG_TIME_KEY, id), 0, -1);
-        for (String title : titles) {
-            categoryData.addBlog(get(title));
+        Set<Tuple> titlesWithTimes = jedis.zrevrangeWithScores(String.format(BLOG_TIME_KEY, id), 0, -1);
+        for (Tuple titlesWithTime : titlesWithTimes) {
+            BlogData blogData = new BlogData();
+            blogData.setTitle(titlesWithTime.getElement());
+            blogData.setCreated(new Date(new BigDecimal(titlesWithTime.getScore()).longValue()));
+            categoryData.addBlog(blogData);
         }
         return categoryData;
     }

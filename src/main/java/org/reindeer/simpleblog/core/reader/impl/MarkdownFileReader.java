@@ -139,6 +139,7 @@ public class MarkdownFileReader extends BlogDataReader {
             int headerCount = 0;
             boolean headerEnd = false;
             String separator = System.getProperty("line.separator");
+            blog.init();
             for (String line : allLines) {
                 if (line.startsWith("-") && !headerEnd) {
                     headerCount++;

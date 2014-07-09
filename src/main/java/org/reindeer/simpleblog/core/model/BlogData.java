@@ -15,7 +15,7 @@ import java.util.Map;
  */
 public class BlogData implements Comparable<BlogData> {
 
-    private BeanMap beanMap = BeanMap.create(this);
+    private BeanMap beanMap;
 
     private String title;
 
@@ -44,9 +44,25 @@ public class BlogData implements Comparable<BlogData> {
             blogData.setCreated(dateFormat.parse(map.get("created")));
             blogData.setLastModified(dateFormat.parse(map.get("lastModified")));
         } catch (ParseException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         return blogData;
+    }
+
+    public void init() {
+        beanMap = BeanMap.create(this);
+    }
+
+    public Map<String, String> toMap() {
+        Map<String, String> map = new HashMap<>();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        map.put("title", getTitle());
+//        map.put("description",getDescription());
+        map.put("category", getCategory());
+        map.put("content", getContent());
+        map.put("created", dateFormat.format(getCreated()));
+        map.put("lastModified", dateFormat.format(getLastModified()));
+        return map;
     }
 
     public String getTitle() {
@@ -106,6 +122,9 @@ public class BlogData implements Comparable<BlogData> {
     }
 
     public void setValue(String key, Object value) {
+        if (beanMap == null) {
+            return;
+        }
         beanMap.put(key, value);
     }
 
@@ -162,15 +181,4 @@ public class BlogData implements Comparable<BlogData> {
         return result;
     }
 
-    public Map<String, String> toMap() {
-        Map<String, String> map = new HashMap<>();
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        map.put("title", getTitle());
-//        map.put("description",getDescription());
-        map.put("category", getCategory());
-        map.put("content", getContent());
-        map.put("created", dateFormat.format(getCreated()));
-        map.put("lastModified", dateFormat.format(getLastModified()));
-        return map;
-    }
 }
