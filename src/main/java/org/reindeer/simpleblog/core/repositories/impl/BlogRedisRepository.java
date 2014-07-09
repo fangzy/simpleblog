@@ -30,6 +30,7 @@ public class BlogRedisRepository extends BlogRepository {
     private static final String BLOG_TIME_KEY = "blog:time:%s";
     private static final String BLOG_DATA_KEY = "blog:data:%s";
     private static final String BLOG_TAG_KEY = "blog:tag:%s";
+    private static final String BLOG_OBJ_KEY = "blog:verify:%s";
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
@@ -227,9 +228,23 @@ public class BlogRedisRepository extends BlogRepository {
     }
 
     @Override
-    public boolean isEmpty() {
-        Jedis jedis = JedisProxy.create();
-        return jedis.zcard(String.format(BLOG_LIST_KEY, "all")) == 0;
+    public boolean checkObjectId(String objectId) {
+        boolean result = false;
+        if (objectId != null) {
+            Jedis jedis = JedisProxy.create();
+            String redisObjId = jedis.get(String.format(BLOG_OBJ_KEY, "objectId"));
+            if (redisObjId != null) {
+                result = redisObjId.equals(objectId);
+            }
+        }
+        return result;
     }
 
+    @Override
+    public void saveObjectId(String objectId) {
+        if (objectId != null && !"".equals(objectId)) {
+            Jedis jedis = JedisProxy.create();
+            jedis.set(String.format(BLOG_OBJ_KEY, "objectId"), objectId);
+        }
+    }
 }

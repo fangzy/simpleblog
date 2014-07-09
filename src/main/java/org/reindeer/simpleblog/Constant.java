@@ -14,4 +14,9 @@ public class Constant {
      * default random title quantity
      */
     public static final int RANDOM_NO = 5;
+
+    /**
+     * default recent title quantity
+     */
+    public static final int RECENT_NO = 10;
 }

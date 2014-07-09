@@ -6,6 +6,7 @@ import freemarker.template.TemplateModelException;
 import org.reindeer.simpleblog.core.model.BlogData;
 import org.reindeer.simpleblog.core.reader.BlogDataReader;
 import org.reindeer.simpleblog.core.repositories.BlogRepository;
+import org.reindeer.simpleblog.core.util.GitHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,11 +37,13 @@ public class BlogDataProcessor implements ApplicationListener<ContextRefreshedEv
     @Autowired
     private SiteConfig siteConfig;
 
+    private String objectId;
+
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         if (event.getApplicationContext().getParent() == null) {
             logger.debug("Refresh event was triggered.");
-            if (repository.isEmpty()) {
+            if (!checkRepository()) {
                 refreshBlogData();
             }
             setFreeMarkerVariables();
@@ -57,8 +60,18 @@ public class BlogDataProcessor implements ApplicationListener<ContextRefreshedEv
         }
     }
 
+    private boolean checkRepository() {
+        String objectId = GitHelper.getLastObjectId(siteConfig.get("blogLocal"), siteConfig.get("blogRemote"));
+        boolean result = repository.checkObjectId(objectId);
+        if (!result) {
+            this.objectId = objectId;
+        }
+        return result;
+    }
+
     private void refreshBlogData() {
         List<BlogData> list = reader.read();
         repository.init(list);
+        repository.saveObjectId(this.objectId);
     }
 }

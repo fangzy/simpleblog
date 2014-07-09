@@ -124,11 +124,14 @@ public abstract class BlogRepository {
         Map<String, Object> map = new HashMap<>();
         map.put("categoryCount", getCategoryCount());
         map.put("archiveCount", getArchiveCount());
-        map.put("recentTitles", getRecentTitles(10));
+        map.put("recentTitles", getRecentTitles(Constant.RECENT_NO));
         return map;
     }
 
-    public boolean isEmpty() {
-        return true;
+    public boolean checkObjectId(String objectId) {
+        return false;
+    }
+
+    public void saveObjectId(String objectId) {
     }
 }

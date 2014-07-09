@@ -2,6 +2,7 @@ package org.reindeer.simpleblog.core.reader.impl;
 
 import org.reindeer.simpleblog.core.model.BlogData;
 import org.reindeer.simpleblog.core.reader.BlogDataReader;
+import org.reindeer.simpleblog.core.util.FileHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -39,7 +40,7 @@ public class MarkdownFileReader extends BlogDataReader {
     public List<BlogData> read() {
         MarkdownFileFinder finder = new MarkdownFileFinder();
         try {
-            Files.walkFileTree(Paths.get(config.get("blogContentPath")), finder);
+            Files.walkFileTree(Paths.get(FileHelper.getRealPath(config.get("blogLocal"))), finder);
         } catch (IOException e) {
             logger.error("Error occured while searching markdown files.", e);
         }
