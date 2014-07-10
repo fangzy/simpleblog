@@ -33,9 +33,9 @@ public class GitHelper {
                     .build();
 
             boolean exists = repository.getObjectDatabase().exists();
-            if (exists) {
-                exists = repository.getRemoteNames().contains(remoteUrl);
-            }
+//            if (exists) {
+//                exists = repository.getRemoteNames().contains(remoteUrl);
+//            }
             if (!exists) {
                 logger.warn(path.toString() + " doesn't exist git repository.");
                 //TODO delete all files

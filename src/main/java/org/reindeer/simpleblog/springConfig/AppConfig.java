@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
@@ -21,6 +22,7 @@ import java.util.Properties;
  */
 @Configuration
 @ComponentScan("org.reindeer.simpleblog.core")
+@EnableScheduling
 public class AppConfig {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());

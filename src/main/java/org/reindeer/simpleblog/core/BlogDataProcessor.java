@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
@@ -73,5 +74,10 @@ public class BlogDataProcessor implements ApplicationListener<ContextRefreshedEv
         List<BlogData> list = reader.read();
         repository.init(list);
         repository.saveObjectId(this.objectId);
+    }
+
+    @Scheduled(cron = "30 * * * * ?")
+    public void syncBlogData(){
+        logger.debug("sync test");
     }
 }
