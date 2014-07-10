@@ -76,8 +76,14 @@ public class BlogDataProcessor implements ApplicationListener<ContextRefreshedEv
         repository.saveObjectId(this.objectId);
     }
 
-    @Scheduled(cron = "30 * * * * ?")
+    @Scheduled(cron = "0 1 * * * ?")
     public void syncBlogData(){
         logger.debug("sync test");
+        String objectId = GitHelper.pullRemoteRepository(siteConfig.get("blogLocal"));
+        boolean result = repository.checkObjectId(objectId);
+        if (!result) {
+            List<BlogData> list = reader.read();
+            repository.syncBlogData(list, objectId);
+        }
     }
 }

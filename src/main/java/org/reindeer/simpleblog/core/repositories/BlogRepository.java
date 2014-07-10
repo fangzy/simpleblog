@@ -134,4 +134,7 @@ public abstract class BlogRepository {
 
     public void saveObjectId(String objectId) {
     }
+
+    public void syncBlogData(List<BlogData> list, String objectId) {
+    }
 }

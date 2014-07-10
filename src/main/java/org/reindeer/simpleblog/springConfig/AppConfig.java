@@ -67,7 +67,8 @@ public class AppConfig {
 
         String host = properties.getProperty("redis.host");
         int port = Integer.parseInt(properties.getProperty("redis.port"));
-        return new JedisPool(jedisPoolConfig, host, port);
+        String password = properties.getProperty("redis.password");
+        return new JedisPool(jedisPoolConfig, host, port, 3000, password);
     }
 
 }

@@ -39,22 +39,65 @@ public class BlogRedisRepository extends BlogRepository {
         pipeline.flushDB();
         DateFormat displayFormat = new SimpleDateFormat("MMMMM yyyy", Locale.ENGLISH);
         for (BlogData blogData : blogDataList) {
-            Date time = blogData.getCreated();
-            String timeStr = displayFormat.format(time);
-            Date yearMonth = null;
-            try {
-                yearMonth = displayFormat.parse(timeStr);
-            } catch (ParseException e) {
-                logger.error("An unexpected error occurred.", e);
-            }
-            pipeline.zadd(String.format(BLOG_LIST_KEY, "all"), time.getTime(), blogData.getTitle());
-            pipeline.sadd(String.format(BLOG_LIST_KEY, "category"), blogData.getCategory());
-            pipeline.zadd(String.format(BLOG_LIST_KEY, "time"), yearMonth != null ? yearMonth.getTime() : 0, timeStr);
-            pipeline.zadd(String.format(BLOG_CATEGORY_KEY, blogData.getCategory()), time.getTime(), blogData.getTitle());
-            pipeline.zadd(String.format(BLOG_TIME_KEY, timeStr), time.getTime(), blogData.getTitle());
-            pipeline.hmset(String.format(BLOG_DATA_KEY, blogData.getTitle()), blogData.toMap());
+            saveBlogData(blogData, displayFormat, pipeline);
         }
         pipeline.sync();
+    }
+
+    @Override
+    public void syncBlogData(List<BlogData> list, String objectId) {
+        Jedis jedis = JedisProxy.create();
+        Pipeline pipeline = jedis.pipelined();
+        Set<String> titleSet = jedis.zrange(String.format(BLOG_LIST_KEY, "all"), 0, -1);
+        DateFormat displayFormat = new SimpleDateFormat("MMMMM yyyy", Locale.ENGLISH);
+        Set<String> newTitle = new HashSet<>();
+
+        // add new blog
+        for (BlogData blogData : list) {
+            if (!titleSet.contains(blogData.getTitle())) {
+                saveBlogData(blogData, displayFormat, pipeline);
+            }
+            newTitle.add(blogData.getTitle());
+        }
+        pipeline.sync();
+
+        // remove old blog
+        titleSet.removeAll(newTitle);
+        String[] removedTitles = titleSet.toArray(new String[0]);
+        jedis.zrem(String.format(BLOG_LIST_KEY, "all"), removedTitles);
+        for (String title : titleSet) {
+            BlogData blogData = get(title);
+            Date time = blogData.getCreated();
+            String timeStr = displayFormat.format(time);
+            jedis.zrem(String.format(BLOG_CATEGORY_KEY, blogData.getCategory()), title);
+            jedis.zrem(String.format(BLOG_TIME_KEY, timeStr), title);
+            jedis.del(String.format(BLOG_DATA_KEY, blogData.getTitle()));
+            long categoryCount = jedis.zcard(String.format(BLOG_CATEGORY_KEY, blogData.getCategory()));
+            if (categoryCount == 0) {
+                jedis.srem(String.format(BLOG_LIST_KEY, "category"), blogData.getCategory());
+            }
+            long timeCount = jedis.zcard(String.format(BLOG_TIME_KEY, timeStr));
+            if (timeCount == 0) {
+                jedis.zrem(String.format(BLOG_LIST_KEY, "time"), timeStr);
+            }
+        }
+    }
+
+    private void saveBlogData(BlogData blogData, DateFormat displayFormat, Pipeline pipeline) {
+        Date time = blogData.getCreated();
+        String timeStr = displayFormat.format(time);
+        Date yearMonth = null;
+        try {
+            yearMonth = displayFormat.parse(timeStr);
+        } catch (ParseException e) {
+            logger.error("An unexpected error occurred.", e);
+        }
+        pipeline.zadd(String.format(BLOG_LIST_KEY, "all"), time.getTime(), blogData.getTitle());
+        pipeline.sadd(String.format(BLOG_LIST_KEY, "category"), blogData.getCategory());
+        pipeline.zadd(String.format(BLOG_LIST_KEY, "time"), yearMonth != null ? yearMonth.getTime() : 0, timeStr);
+        pipeline.zadd(String.format(BLOG_CATEGORY_KEY, blogData.getCategory()), time.getTime(), blogData.getTitle());
+        pipeline.zadd(String.format(BLOG_TIME_KEY, timeStr), time.getTime(), blogData.getTitle());
+        pipeline.hmset(String.format(BLOG_DATA_KEY, blogData.getTitle()), blogData.toMap());
     }
 
     @Override
