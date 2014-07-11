@@ -5,12 +5,17 @@ import org.reindeer.simpleblog.core.model.BlogData;
 import org.reindeer.simpleblog.core.model.CategoryData;
 import org.reindeer.simpleblog.core.repositories.BlogCache;
 import org.reindeer.simpleblog.core.repositories.BlogRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.TreeMap;
 
 /**
  * Created by fzy on 2014/6/27.
  */
+@Repository
 public class BlogCacheRepository extends BlogRepository {
 
     private BlogCache cache = new BlogCache();
@@ -84,15 +89,6 @@ public class BlogCacheRepository extends BlogRepository {
     @Override
     protected CategoryData getArchiveData(String id) {
         return cache.getArchiveData(id);
-    }
-
-    @Override
-    public Map<String, Object> getFreeMarkerVariables() {
-        Map<String, Object> map = new HashMap<>();
-        map.put("categoryCount", getCategoryCount());
-        map.put("archiveCount", getArchiveCount());
-        map.put("recentTitles", getRecentTitles(10));
-        return map;
     }
 
 }

@@ -32,12 +32,6 @@ public class BlogCache {
 
     private Comparator<BlogData> blogDataComparator = new BlogDataComparator();
 
-    public void put(BlogData t) {
-        blogDataMap.put(t.getTitle(), t);
-        blogDataList.add(t);
-        Collections.sort(blogDataList, blogDataComparator);
-    }
-
     /**
      * 初始化缓存
      * <ul>
