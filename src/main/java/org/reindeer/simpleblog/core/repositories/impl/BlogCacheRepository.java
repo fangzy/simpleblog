@@ -7,10 +7,7 @@ import org.reindeer.simpleblog.core.repositories.BlogCache;
 import org.reindeer.simpleblog.core.repositories.BlogRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * Created by fzy on 2014/6/27.
@@ -23,6 +20,7 @@ public class BlogCacheRepository extends BlogRepository {
     @Override
     public void init(List<BlogData> blogDataList) {
         cache.init(blogDataList);
+        cache.setLastModified(new Date().getTime());
     }
 
     protected BlogData get(String title) {
@@ -98,12 +96,20 @@ public class BlogCacheRepository extends BlogRepository {
 
     @Override
     public void saveObjectId(String objectId) {
+        if (objectId == null) {
+            return;
+        }
         cache.setObjectId(objectId);
     }
 
     @Override
     public void syncBlogData(List<BlogData> list, String objectId) {
         init(list);
-        cache.setObjectId(objectId);
+        saveObjectId(objectId);
+    }
+
+    @Override
+    public long getLastModified() {
+        return cache.getLastModified();
     }
 }

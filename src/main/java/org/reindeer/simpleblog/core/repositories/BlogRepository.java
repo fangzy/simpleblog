@@ -5,10 +5,7 @@ import org.reindeer.simpleblog.Constant;
 import org.reindeer.simpleblog.core.model.*;
 import org.reindeer.simpleblog.exception.ResourceNotFoundException;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * Created by fzy on 2014/6/27.
@@ -136,5 +133,9 @@ public abstract class BlogRepository {
     }
 
     public void syncBlogData(List<BlogData> list, String objectId) {
+    }
+
+    public long getLastModified() {
+        return new Date().getTime();
     }
 }

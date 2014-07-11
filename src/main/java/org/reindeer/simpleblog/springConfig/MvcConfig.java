@@ -1,11 +1,13 @@
 package org.reindeer.simpleblog.springConfig;
 
+import org.reindeer.simpleblog.interceptor.CacheCheckInterceptor;
 import org.reindeer.simpleblog.interceptor.ProcessTimeInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
 
@@ -29,6 +31,15 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new CacheCheckInterceptor());
         registry.addInterceptor(new ProcessTimeInterceptor());
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.setOrder(0).addResourceHandler("/favicon.ico")
+                .addResourceLocations("/favicon.ico").setCachePeriod(36000);
+        registry.setOrder(0).addResourceHandler("/robots.txt")
+                .addResourceLocations("/robots.txt").setCachePeriod(36000);
     }
 }

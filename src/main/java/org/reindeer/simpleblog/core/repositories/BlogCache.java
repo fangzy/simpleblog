@@ -34,6 +34,8 @@ public class BlogCache {
 
     private String objectId = "";
 
+    private long lastModified = new Date().getTime();
+
     /**
      * 初始化缓存
      * <ul>
@@ -173,6 +175,14 @@ public class BlogCache {
 
     public void setObjectId(String objectId) {
         this.objectId = objectId;
+    }
+
+    public long getLastModified() {
+        return lastModified;
+    }
+
+    public void setLastModified(long lastModified) {
+        this.lastModified = lastModified;
     }
 
     class BlogDataComparator implements Comparator<BlogData> {
