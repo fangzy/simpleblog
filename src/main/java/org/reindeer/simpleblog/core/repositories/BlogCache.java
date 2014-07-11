@@ -32,6 +32,8 @@ public class BlogCache {
 
     private Comparator<BlogData> blogDataComparator = new BlogDataComparator();
 
+    private String objectId = "";
+
     /**
      * 初始化缓存
      * <ul>
@@ -163,6 +165,14 @@ public class BlogCache {
 
     public HashMap<String, MutableInt> getArchiveCountMap() {
         return archiveCountMap;
+    }
+
+    public String getObjectId() {
+        return objectId;
+    }
+
+    public void setObjectId(String objectId) {
+        this.objectId = objectId;
     }
 
     class BlogDataComparator implements Comparator<BlogData> {

@@ -91,4 +91,19 @@ public class BlogCacheRepository extends BlogRepository {
         return cache.getArchiveData(id);
     }
 
+    @Override
+    public boolean checkObjectId(String objectId) {
+        return cache.getObjectId().equals(objectId);
+    }
+
+    @Override
+    public void saveObjectId(String objectId) {
+        cache.setObjectId(objectId);
+    }
+
+    @Override
+    public void syncBlogData(List<BlogData> list, String objectId) {
+        init(list);
+        cache.setObjectId(objectId);
+    }
 }
