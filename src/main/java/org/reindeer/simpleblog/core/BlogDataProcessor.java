@@ -77,7 +77,7 @@ public class BlogDataProcessor implements ApplicationListener<ContextRefreshedEv
     }
 
     @Scheduled(cron = "0 1 * * * ?")
-    public void syncBlogData(){
+    public void syncBlogData() {
         logger.debug("sync begin");
         String objectId = GitHelper.pullRemoteRepository(siteConfig.get("blogLocal"));
         boolean result = repository.checkObjectId(objectId);
