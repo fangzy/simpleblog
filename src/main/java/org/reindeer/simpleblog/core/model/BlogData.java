@@ -28,9 +28,6 @@ public class BlogData implements Comparable<BlogData> {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private Date created;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date lastModified;
-
     private String content;
 
     public static BlogData valueOf(Map<String, String> map) {
@@ -42,7 +39,6 @@ public class BlogData implements Comparable<BlogData> {
         blogData.setContent(map.get("content"));
         try {
             blogData.setCreated(dateFormat.parse(map.get("created")));
-            blogData.setLastModified(dateFormat.parse(map.get("lastModified")));
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
@@ -61,7 +57,6 @@ public class BlogData implements Comparable<BlogData> {
         map.put("category", getCategory());
         map.put("content", getContent());
         map.put("created", dateFormat.format(getCreated()));
-        map.put("lastModified", dateFormat.format(getLastModified()));
         return map;
     }
 
@@ -105,14 +100,6 @@ public class BlogData implements Comparable<BlogData> {
         this.created = created;
     }
 
-    public Date getLastModified() {
-        return lastModified;
-    }
-
-    public void setLastModified(Date lastModified) {
-        this.lastModified = lastModified;
-    }
-
     public String getContent() {
         return content;
     }
@@ -136,7 +123,6 @@ public class BlogData implements Comparable<BlogData> {
                 ", category='" + category + '\'' +
                 ", tags=" + tags + '\'' +
                 ", created=" + created +
-                ", lastModified=" + lastModified +
                 ", content='" + content + "...\'" +
                 "}";
     }
@@ -153,7 +139,6 @@ public class BlogData implements Comparable<BlogData> {
         if (!created.equals(blogData.created)) return false;
         if (description != null ? !description.equals(blogData.description) : blogData.description != null)
             return false;
-        if (!lastModified.equals(blogData.lastModified)) return false;
         if (tags != null ? !tags.equals(blogData.tags) : blogData.tags != null) return false;
         if (!title.equals(blogData.title)) return false;
 
@@ -167,7 +152,6 @@ public class BlogData implements Comparable<BlogData> {
         result = 31 * result + category.hashCode();
         result = 31 * result + (tags != null ? tags.hashCode() : 0);
         result = 31 * result + created.hashCode();
-        result = 31 * result + lastModified.hashCode();
         result = 31 * result + content.hashCode();
         return result;
     }

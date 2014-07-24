@@ -19,7 +19,6 @@
     <div id="main" class="row">
         <div id="post" class="col-md-8">
             <article>${view.blogData.content}</article>
-            <h6>Last modified : ${view.blogData.lastModified?string("MMMMM d,yyyy HH:mm:ss")}</h6>
             <ul class="pager">
             [#if view.prevTitle??]
                 <li class="previous"><a href="${view.prevTitle?url}">${"&larr; ${view.prevTitle}"}</a></li>

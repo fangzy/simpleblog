@@ -17,7 +17,6 @@
                     href="${site.blogAuthorUrl}">${site.blogAuthor}</a>.Filed
                 under <a href="/${site.blogCategoryKey}/${blogData.category?url}">${blogData.category}</a>.</h4>
             <article>${blogData.content}</article>
-            <h6>Last modified : ${blogData.lastModified?string("MMMMM d,yyyy HH:mm:ss")}</h6>
         [/#list]
             <div>
                 <ul class="pagination">

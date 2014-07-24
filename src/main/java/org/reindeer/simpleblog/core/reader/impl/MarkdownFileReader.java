@@ -14,7 +14,6 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -163,10 +162,8 @@ public class MarkdownFileReader extends BlogDataReader {
                 logger.warn("Wrong file with no title.");
                 return null;
             }
-            BasicFileAttributes attr = Files.readAttributes(file, BasicFileAttributes.class);
             String dateStr = file.getFileName().toString().substring(0, 10);
             blog.setCreated(df.parse(dateStr));
-            blog.setLastModified(new Date(attr.lastModifiedTime().toMillis()));
             blog.setContent(convert.convert(body.toString()));
             String category = blog.getCategory();
             if ("".equals(category)) {
