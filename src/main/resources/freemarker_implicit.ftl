@@ -1,5 +1,6 @@
 [#ftl]
 [#-- @implicitly included --]
+[#-- @ftlvariable name="categoryKey" type="java.lang.String" --]
 [#-- @ftlvariable name="recentTitles" type="java.lang.String[]" --]
 [#-- @ftlvariable name="site" type="java.util.Hashtable<Object,Object>" --]
 [#-- @ftlvariable name="archiveCount" type="java.util.HashMap<String,MutableInt>" --]

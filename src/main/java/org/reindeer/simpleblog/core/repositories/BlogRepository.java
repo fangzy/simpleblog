@@ -57,7 +57,7 @@ public abstract class BlogRepository {
         List<BlogData> blogDataList = getSubList(currentPos, endPos);
         pageView.setBlogDataList(blogDataList);
         pageView.setPageSize(pageSize);
-        pageView.setPageCurrent(index);
+        pageView.setPageNo(index);
         pageView.setPageTotal(totalPage);
         pageView.setRandomTitles(getRandomTitles(Constant.RANDOM_NO));
         return pageView;

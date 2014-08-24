@@ -35,7 +35,7 @@ public class AppConfig {
     @Bean
     public FreeMarkerConfigurer freeMarkerConfigurer() {
         FreeMarkerConfigurer freeMarkerConfigurer = new FreeMarkerConfigurer();
-        freeMarkerConfigurer.setTemplateLoaderPath("/");
+        freeMarkerConfigurer.setTemplateLoaderPath(siteConfig().get("blogTemplate"));
         freeMarkerConfigurer.setDefaultEncoding("UTF-8");
         freeMarkerConfigurer.setConfigLocation(freemarkerSettings);
         return freeMarkerConfigurer;

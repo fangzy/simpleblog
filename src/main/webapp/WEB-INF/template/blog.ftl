@@ -1,5 +1,5 @@
 [#setting locale="en_CN"]
-[#include "/WEB-INF/template/header.ftl"]
+[#include "header.ftl"]
 <body>
 <div class="container-fluid">
     <a href="/">回到首页</a>
@@ -28,8 +28,8 @@
             [/#if]
             </ul>
         </div>
-    [#include "/WEB-INF/template/side.ftl"]
+    [#include "side.ftl"]
     </div>
 </div>
 </body>
-[#include "/WEB-INF/template/footer.ftl"]
+[#include "footer.ftl"]

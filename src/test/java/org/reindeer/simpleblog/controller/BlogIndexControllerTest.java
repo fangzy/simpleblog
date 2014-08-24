@@ -23,7 +23,7 @@ public class BlogIndexControllerTest extends AbstractControllerTests {
         PageView view = (PageView) result.getModelAndView().getModel().get("view");
         Assert.assertEquals("Hello world!", view.getBlogDataList().get(0).getTitle());
         Assert.assertEquals(1, view.getPageTotal());
-        Assert.assertEquals(1, view.getPageCurrent());
+        Assert.assertEquals(1, view.getPageNo());
 
         this.mockMvc.perform(get("/index"))
                 .andExpect(status().isOk());
@@ -38,7 +38,7 @@ public class BlogIndexControllerTest extends AbstractControllerTests {
         PageView view = (PageView) result.getModelAndView().getModel().get("view");
         Assert.assertEquals("Hello world!", view.getBlogDataList().get(0).getTitle());
         Assert.assertEquals(1, view.getPageTotal());
-        Assert.assertEquals(1, view.getPageCurrent());
+        Assert.assertEquals(1, view.getPageNo());
 
         this.mockMvc.perform(get("/page/2"))
                 .andExpect(status().isNotFound());
