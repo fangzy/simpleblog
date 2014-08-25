@@ -9,6 +9,9 @@
             [#assign x=1]
             [#list view.blogDataList as blogData]
                 <article id="${"post-"+x}" class="post">
+                    <h2 class="title"><a href="/${site.blogPostKey}/${blogData.title?url}">${blogData.title}</a>
+                    </h2>
+
                     <p class="meta-info"><span
                             class="glyphicon glyphicon-time"></span> ${blogData.created?string("MMMMM d,yyyy")}
                         &nbsp;&nbsp;
@@ -17,12 +20,16 @@
                     </p>
 
                     <div class="post-content">
-                        <h2 class="title"><a href="/${site.blogPostKey}/${blogData.title?url}">${blogData.title}</a>
-                        </h2>
-
-                        <p>${blogData.content?substring(0,500)}...</p>
-                        <a href="/${site.blogPostKey}/${blogData.title?url}" class="more">READ MORE</a>
+                        [#if blogData.content?length>500]
+                            <p>${blogData.content?substring(0,500)}...</p>
+                        [#else]
+                            <p>${blogData.content}</p>
+                        [/#if]
                     </div>
+                    <p class="more pull-right">
+                        <a href="/${site.blogPostKey}/${blogData.title?url}">READ MORE</a>
+                        <i class="glyphicon glyphicon-chevron-right"></i>
+                    </p>
                 </article>
                 [#assign x=x+1]
             [/#list]
@@ -35,13 +42,13 @@
                         <li><a href="/${site.blogPageKey}/${view.pageNo?int-1}">&lsaquo;</a></li>
                     [/#if]
                     [#list 1..view.pageTotal as m]
-                        [#assign i=((view.pageNo-1)/5)?floor]
+                        [#assign i=((view.pageNo-1)/view.pageSize)?floor]
                         [#if i<0]
                             [#assign i=0]
                         [/#if]
                         [#if view.pageNo==m ]
                             <li class="active"><a href="#">${m} <span class="sr-only">(current)</span></a></li>
-                        [#elseif m<=i*5+5 && m>i*5]
+                        [#elseif m<=i*view.pageSize+view.pageSize && m>i*view.pageSize]
                             <li><a href="/${site.blogPageKey}/${m}">${m}</a></li>
                         [/#if]
                     [/#list]

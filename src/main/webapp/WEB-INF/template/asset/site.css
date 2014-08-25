@@ -1,35 +1,25 @@
 #main-area {
     padding-top: 70px;
     background-color: #f9f9f9;
-    border-bottom: 1px solid #eeeeee;
     padding-bottom: 60px;
 }
 
 .post {
-    border: 1px solid #ddd;
-    background-color: #fff;
     position: relative;
     margin-bottom: 30px;
     border-radius: 4px;
-}
-
-.post:before {
-    content: '';
-    position: absolute;
-    height: 8px;
-    bottom: -8px;
-    left: 0;
-    width: 100%;
+    box-shadow: 2px 2px 2px #8E8E93;
+    background-color: #fff;
+    padding: 10px 15px 30px 25px;
 }
 
 .post .meta-info {
-    background-color: #f5f5f5;
-    border-bottom: 1px solid #ddd;
     font-size: 16px;
     color: #b8b8b8;
     text-shadow: 1px 1px 0 #fff;
     font-weight: lighter;
-    padding: 19px 28px;
+    border-top: 1px dashed #ddd;
+    padding-top: 10px;
 }
 
 .post .meta-info a {
@@ -39,21 +29,20 @@
 
 .post h2.title, h1.title {
     font-size: 30px;
-    font-weight: lighter;
-    color: #4c4c4c;
+    font-weight: bold;
 }
 
 .post h2.title a {
     text-decoration: none;
-    color: #4c4c4c;
+    color: #2B2B2B;
 }
 
 .post h2.title a:hover {
-    color: #111;
+    color: #FF5E3A;
 }
 
 .post-content {
-    padding: 10px 15px 30px 44px;
+    color: #4A4A4A;
 }
 
 .post-content h1, h2 {
@@ -66,12 +55,12 @@
     font-weight: lighter;
 }
 
-.post-content a.more {
-    position: relative;
-    top: 0;
-    right: 0;
+.post .more {
     padding-right: 14px;
-    float: right;
+    color: #bababa;
+}
+
+.post .more a {
     font-family: 'Open Sans Condensed', Arial, sans-serif;
     text-transform: uppercase;
     color: #bababa;
@@ -80,7 +69,7 @@
     text-decoration: none;
 }
 
-.post-content a.more:hover {
+.post .more a:hover {
     color: #111;
 }
 
@@ -88,10 +77,61 @@
     .affix {
         position: fixed;
         top: 70px;
+        width: 293px;
+    }
+
+    .affix-bottom {
+        position: absolute;
+        width: 293px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .affix {
+        position: fixed;
+        top: 70px;
+        width: 360px;
+    }
+
+    .affix-bottom {
+        position: absolute;
         width: 360px;
     }
 }
 
-.affix-bottom {
-    position: absolute;
+#side a {
+    color: #888888;
+}
+
+#side .side-item-heading {
+    background-color: #f9f9f9;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #007AFF;
+    font-size: 18px;
+}
+
+#side .list-group-item {
+    background-color: #f9f9f9;
+    border-bottom: 1px dashed #ddd;
+    border-top: 1px dashed #ddd;
+    border-left: none;
+    border-right: none;
+    padding-left: 0;
+}
+
+#side .list-group-item:first-child {
+    border-top: none;
+}
+
+#side .list-group-item:last-child {
+    border-bottom: none;
+}
+
+#side .list-group-item a {
+    padding-left: 10px;
+}
+
+#side .list-group-item a:hover {
+    border-left: 4px solid #FF9500;
+    text-decoration: none;
 }

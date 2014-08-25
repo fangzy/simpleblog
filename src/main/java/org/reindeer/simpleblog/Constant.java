@@ -8,7 +8,7 @@ public class Constant {
     /**
      * default page size
      */
-    public static final int PAGE_SIZE = 5;
+    public static final int PAGE_SIZE = 10;
 
     /**
      * default random title quantity
@@ -18,5 +18,5 @@ public class Constant {
     /**
      * default recent title quantity
      */
-    public static final int RECENT_NO = 10;
+    public static final int RECENT_NO = 5;
 }

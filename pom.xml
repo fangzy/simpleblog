@@ -8,8 +8,10 @@
     <name>simpleblog Maven Webapp</name>
     <url>http://maven.apache.org</url>
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <org.springframework-version>4.0.5.RELEASE</org.springframework-version>
-        <org.slf4j-version>1.7.7</org.slf4j-version>
+        <org.slf4j-version>1.7.6</org.slf4j-version>
         <org.freemarker-version>2.3.20</org.freemarker-version>
         <org.eclipse.jgit.version>3.4.1.201406201815-r</org.eclipse.jgit.version>
     </properties>
@@ -131,7 +133,19 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
     <build>
         <finalName>simpleblog</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 </project>
