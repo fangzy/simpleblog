@@ -1,7 +1,7 @@
 <div class="col-md-4">
     <div id="side" data-spy="affix" data-offset-top="30" data-offset-bottom="250">
-        <div class="side-item">
-            <div class="side-item-heading">Archives</div>
+        <div id="archive" class="side-item">
+            <div class="side-item-heading">存档</div>
             <ul class="list-group">
             [#list archiveCount?keys as archiveKey]
                 [#assign timePath=(archiveKey?date("MMMMM yyyy"))?string(site.blogArchiveFormat)]
@@ -12,8 +12,8 @@
             [/#list]
             </ul>
         </div>
-        <div class="side-item">
-            <div class="side-item-heading">Recent posts</div>
+        <div id="recent" class="side-item">
+            <div class="side-item-heading">近期发表</div>
             <ul class="list-group">
             [#list recentTitles as recent]
                 <li class="list-group-item">
@@ -22,8 +22,8 @@
             [/#list]
             </ul>
         </div>
-        <div class="side-item">
-            <div class="side-item-heading">Random recommends</div>
+        <div id="recommend" class="side-item">
+            <div class="side-item-heading">随机推荐</div>
             <ul class="list-group">
             [#list view.randomTitles as random]
                 <li class="list-group-item">

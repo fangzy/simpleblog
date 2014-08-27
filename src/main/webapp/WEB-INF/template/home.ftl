@@ -12,19 +12,18 @@
                     <h2 class="title"><a href="/${site.blogPostKey}/${blogData.title?url}">${blogData.title}</a>
                     </h2>
 
-                    <p class="meta-info"><span
-                            class="glyphicon glyphicon-time"></span> ${blogData.created?string("MMMMM d,yyyy")}
+                    <p class="meta-info">
+                        <i class="glyphicon glyphicon-time"></i> ${blogData.created?string("yyyy'年'M'月'd'日'")}
                         &nbsp;&nbsp;
-                        <span class="glyphicon glyphicon-folder-open"></span>
+                        <i class="glyphicon glyphicon-user"></i>
+                        <a href="${site.blogAuthorUrl}"> ${site.blogAuthor}</a>
+                        &nbsp;&nbsp;
+                        <i class="glyphicon glyphicon-folder-open"></i>&nbsp;
                         <a href="/${site.blogCategoryKey}/${blogData.category?url}"> ${blogData.category}</a>
                     </p>
 
                     <div class="post-content">
-                        [#if blogData.content?length>500]
-                            <p>${blogData.content?substring(0,500)}...</p>
-                        [#else]
-                            <p>${blogData.content}</p>
-                        [/#if]
+                        <p>${blogData.content}</p>
                     </div>
                     <p class="more pull-right">
                         <a href="/${site.blogPostKey}/${blogData.title?url}">READ MORE</a>

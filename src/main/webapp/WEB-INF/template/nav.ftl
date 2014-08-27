@@ -9,11 +9,10 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">${site.blogName}</a>
+            <a class="navbar-brand" href="/#">${site.blogName}</a>
         </div>
         <p class="navbar-text navbar-left">${(site.blogDescription)!}</p>
 
-        <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse navbar-right" id="blog-navbar-collapse">
             <ul class="nav navbar-nav">
                 <li class="dropdown">
@@ -40,7 +39,5 @@
                 </div>
             </form>
         </div>
-        <!-- /.navbar-collapse -->
     </div>
-    <!-- /.container-fluid -->
 </nav>
